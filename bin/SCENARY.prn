@@ -12,13 +12,13 @@
           .FALSE.
         Human Health risk assessment
 
-          .FALSE.
+          .TRUE.
         Radiological risk assessment
 
          .TRUE.
         Ecological risk assessment
 
-         .FALSE.
+         .TRUE.
 
 AGRICULTURAL SCENERY (KEY SCENARY = 1)
 In this section. can be chosen the desired exposure routes and modify the parameters' values used in the human health risk calculations when the scenario is the AGRICULTURAL one.

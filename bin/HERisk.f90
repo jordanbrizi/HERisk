@@ -390,7 +390,7 @@
 	  nomevias(14)='Dermal soil'
 !
 	  CALL EXPOSURE (W,CF,SD_CF,FI,SD_FI,IR,SD_IR,FA,SD_FA,FP,SD_FP,ET,SD_ET,SA,SD_SA,AF,SD_AF,EV,SD_EV,&
-	  NVP,NIDADE,NVIAS,SCENAR,NCHEM,NTIME,NDURATION,VARIASAO,NLOCAL,NTYPECONC,HQ,SD_HQ,CR,SD_CR,CHEMICAL,TIMESP,NRISKTYPE,EF_INI,SD_EF_INI,AT_INI,SD_AT_INI,INICIO,nomevias) 
+	  NVP,NIDADE,NVIAS,SCENAR,NCHEM,NTIME,NDURATION,VARIASAO,NLOCAL,NTYPECONC,HQ,SD_HQ,CR,SD_CR,CHEMICAL,TIMESP,NRISKTYPE,EF_INI,SD_EF_INI,AT_INI,SD_AT_INI,INICIO,nomevias,KEY_SD) 
 !
 !
 !
@@ -490,7 +490,7 @@
 !
 !
 ! 
-	  open (UNIT=44, file='Results\Summary Aggregate Risk.json')
+	  open (UNIT=44, file='Results\Health - Summary Aggregate Risk.json')
 !
 !
       WRITE(44,'("{")')
@@ -735,7 +735,7 @@
 !*******************************************************************************************************************************************
 !
 !
-	  open (UNIT=37, file='Results\Extensive Aggregate Risk.json')
+	  open (UNIT=37, file='Results\Health - Extensive Aggregate Risk.json')
 
 
 !
@@ -906,7 +906,7 @@
 !
 !
 !
-	  open (UNIT=38, file='Results\Extensive Cumulative Risk.json')
+	  open (UNIT=38, file='Results\Health - Extensive Cumulative Risk.json')
 
 
 !
@@ -1062,7 +1062,7 @@
 !		*******************************************************************************************
 !
 !
-	  open (UNIT=66, file='Results\Summary Cumulative Risk.json')																				 																				 
+	  open (UNIT=66, file='Results\Health - Summary Cumulative Risk.json')																				 																				 
 !
 !
       WRITE(66,'("{")')
@@ -1268,7 +1268,7 @@
 !
 !------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 !
-	  open (UNIT=55, file='Results\Complementary Analyzes.json')
+	  open (UNIT=55, file='Results\Health - Complementary Analyzes.json')
 !
 !
 !
@@ -1305,114 +1305,14 @@
 !
       DO KO=1,NLOCAL
 !	
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"1 to <2",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,1,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,1,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"2 to <3",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,2,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,2,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"3 to <6",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,3,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,3,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"6 to <11",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,4,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,4,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
 	  WRITE(55,'("{")')
       write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"11 to <16",A1,",")') aspas,aspas,aspas,aspas
 	  DO IOO=1,JIJ
 	  IF(IOO.NE.JIJ)THEN
       write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,5,IOO,1,KO)
 	  ELSE
       write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,5,IOO,1,KO)
 	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"16 to <18",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,6,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,6,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"18 to <21",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,7,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,7,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"21 to <65",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,8,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,8,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-      ifinal=64+NTIMEexp
-!
-	  WRITE(55,'("{")')
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"65 to ",I3,A1,",")') aspas,aspas,aspas,ifinal,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,9,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,9,IOO,1,KO)
-	  ENDIF																					
 	  ENDDO
 	  IF(KO.NE.NLOCAL)THEN
 	  WRITE(55,'("},")')!
@@ -1431,57 +1331,8 @@
 !
       DO KO=1,NLOCAL
 !
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"1 to <2",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,1,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,1,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"2 to <3",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,2,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,2,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"3 to <6",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,3,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,3,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"6 to <11",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,4,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,4,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
 	  WRITE(55,'("{")')
       write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"11 to <16",A1,",")') aspas,aspas,aspas,aspas
 	  DO IOO=1,JIJ
 	  IF(IOO.NE.JIJ)THEN
       write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,5,IOO,1,KO)
@@ -1489,56 +1340,7 @@
       write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,5,IOO,1,KO)
 	  ENDIF
 	  ENDDO
-	  WRITE(55,'("},")')
 !
-	  WRITE(55,'("{")')
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"16 to <18",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,6,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,6,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"18 to <21",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,7,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,7,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"21 to <65",A1,",")') aspas,aspas,aspas,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,8,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,8,IOO,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-      ifinal=64+NTIMEexp
-!
-	  WRITE(55,'("{")')
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"65 to ",I3,A1,",")') aspas,aspas,aspas,ifinal,aspas
-	  DO IOO=1,JIJ
-	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,9,IOO,1,KO)
-	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,9,IOO,1,KO)
-	  ENDIF																					
-	  ENDDO
 	  IF(KO.NE.NLOCAL)THEN
 	  WRITE(55,'("},")')!
 	  ELSE
@@ -1579,58 +1381,8 @@
 !
       DO KO=1,NLOCAL
 !
-!
 	  WRITE(55,'("{")')	
       write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"1 to <2",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_NC(1,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_NC(1,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"2 to <3",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_NC(2,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_NC(2,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"3 to <6",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_NC(3,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_NC(3,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"6 to <11",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_NC(4,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_NC(4,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"11 to <16",A1,",")') aspas,aspas,aspas,aspas
 	  DO KP=1,NVIAS
 	  IF(KP.NE.14)THEN
       write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_NC(5,KP,1,KO)
@@ -1638,54 +1390,7 @@
       write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_NC(5,KP,1,KO)
 	  ENDIF
 	  ENDDO
-	  WRITE(55,'("},")')
 !
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"16 to <18",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_NC(6,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_NC(6,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"18 to <21",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_NC(7,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_NC(7,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"21 to <65",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_NC(8,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_NC(8,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,">65",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_NC(9,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_NC(9,KP,1,KO)
-	  ENDIF
-	  ENDDO
 	  IF(KO.NE.NLOCAL)THEN
 	  WRITE(55,'("},")')!
 	  ELSE
@@ -1707,66 +1412,6 @@
 !
 	  WRITE(55,'("{")')	
       write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"1 to <2",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_C(1,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_C(1,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"2 to <3",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_C(2,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_C(2,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"3 to <6",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_C(3,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_C(3,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"6 to <11",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_C(4,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_C(4,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"11 to <16",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_C(5,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_C(5,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
       write(55,'(A1,"Age groups",A1,":",1X,A1,"16 to <18",A1,",")') aspas,aspas,aspas,aspas
 	  DO KP=1,NVIAS
 	  IF(KP.NE.14)THEN
@@ -1775,42 +1420,7 @@
       write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_C(6,KP,1,KO)
 	  ENDIF
 	  ENDDO
-	  WRITE(55,'("},")')
 !
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"18 to <21",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_C(7,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_C(7,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')	
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"21 to <65",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_C(8,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_C(8,KP,1,KO)
-	  ENDIF
-	  ENDDO
-	  WRITE(55,'("},")')
-!
-	  WRITE(55,'("{")')
-      write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,">65",A1,",")') aspas,aspas,aspas,aspas
-	  DO KP=1,NVIAS
-	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_C(9,KP,1,KO)
-	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_C(9,KP,1,KO)
-	  ENDIF
-	  ENDDO
 	  IF(KO.NE.NLOCAL)THEN
 	  WRITE(55,'("},")')!
 	  ELSE
@@ -1855,7 +1465,7 @@
 	  WRITE(99,'("____________________________________________________________________________________________________________________________________________")')
       WRITE(99,*)
 !
-      CALL ECOLOGICAL(SCENAR,VARIASAO,NDURATION,NCHEM,NTIME,NLOCAL,NTYPECONC,CHEMICAL,SCENARIES)
+      CALL ECOLOGICAL(SCENAR,VARIASAO,NDURATION,NCHEM,NTIME,NLOCAL,NTYPECONC,CHEMICAL,SCENARIES,KEY_SD)
 !
       ENDIF
 !
@@ -3662,11 +3272,11 @@
 	  CPAR,CSTEAM,CFRUIT,CLEAVES,CBEEF,CMILK,CAVE,CEGG,CFISH,CGRAIN,CWATERDER,CWATEROTHER,CSEDIMENT,&
 	  KEYCONC,NTIME,NLOCAL,TIMESP,SD_CSOIL,&
       SD_CWATER,SD_CPAR,SD_CSTEAM,SD_CFRUIT,SD_CLEAVES,SD_CBEEF,SD_CMILK,&
-	  SD_CAVE,SD_CEGG,SD_CFISH,SD_CGRAIN,SD_CWATERDER,SD_CWATEROTHER,SD_CSEDIMENT)
+	  SD_CAVE,SD_CEGG,SD_CFISH,SD_CGRAIN,SD_CWATERDER,SD_CWATEROTHER,SD_CSEDIMENT,KEY_SD)
 !
 !
       IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	  LOGICAL KEYCONC
+	  LOGICAL KEYCONC,KEY_SD
 	CHARACTER(LEN=50)  :: CHEMICAL(500)
     CHARACTER(LEN=30)  :: CONC_TYPE(NTYPECONC)
 	DIMENSION CSOIL(NCHEM,NTIME,NLOCAL)
@@ -3815,10 +3425,24 @@
 	(CONC_TYPE(LO).EQ.'OTHER_WATERS').OR.(CONC_TYPE(LO).EQ.'SOIL').OR.(CONC_TYPE(LO).EQ.'SEDIMENTS'))THEN
 !
 !
+    IF (KEY_SD.EQV..TRUE.)THEN
+!
 	DO j=1,NDURATION	  
 	READ(3,*) (CONC_MATRIX(LO,i,j,k), k=1,NLOCAL)
 	READ(3,*) (SD_CONC_MATRIX(LO,i,j,k), k=1,NLOCAL)	
 	ENDDO
+!
+    ELSE
+!
+	DO j=1,NDURATION	  
+	READ(3,*) (CONC_MATRIX(LO,i,j,k), k=1,NLOCAL)
+	DO ker=1,NLOCAL
+	SD_CONC_MATRIX(LO,i,j,ker)=0.0
+	ENDDO	
+	ENDDO
+!
+	ENDIF
+!
 !
 	IF (CONC_TYPE(LO).EQ.'SOIL') THEN
 	KEYCONC(i,1)= .TRUE.
@@ -4379,11 +4003,11 @@
 !
 !
       SUBROUTINE EXPOSURE(W,CF,SD_CF,FI,SD_FI,IR_INI,SD_IR_INI,FA,SD_FA,FP,SD_FP,ET_INI,SD_ET_INI,SA_INI,SD_SA_INI,AF_INI,SD_AF_INI,EV_INI,SD_EV_INI,&
-	  NVP,NIDADE,NVIAS,SCENAR,NCHEM,NTIME,NDURATION,VARIASAO,NLOCAL,NTYPECONC,HQ,SD_HQ,CR,SD_CR,CHEMICAL,TIMESP,NRISKTYPE,EF_INI,SD_EF_INI,AT_INI,SD_AT_INI,INICIO,nomevias)
+	  NVP,NIDADE,NVIAS,SCENAR,NCHEM,NTIME,NDURATION,VARIASAO,NLOCAL,NTYPECONC,HQ,SD_HQ,CR,SD_CR,CHEMICAL,TIMESP,NRISKTYPE,EF_INI,SD_EF_INI,AT_INI,SD_AT_INI,INICIO,nomevias,KEY_SD)
 !
 !
       IMPLICIT DOUBLE PRECISION(A-H,O-Z)
-	  LOGICAL W,MUTAGENIC
+	  LOGICAL W,MUTAGENIC,KEY_SD
 	  LOGICAL KEYCONC,KEYCONC_2,KEYCONC_6,KEYCONC_B3,KEYCONC_S3,KEYCONC_W3
 	  LOGICAL KEYCONC_M4,KEYCONC_S4,KEYCONC_W4,KEYCONC_F7,KEYCONC_AVE8,KEYCONC_G10,KEYCONC_EGG9
 !
@@ -4467,7 +4091,7 @@
 	  CPAR,CSTEAM,CFRUIT,CLEAVES,CBEEF,CMILK,CAVE,CEGG,CFISH,CGRAIN,CWATERDER,CWATEROTHER,CSEDIMENT,&
 	  KEYCONC,NTIME,NLOCAL,TIMESP,SD_CSOIL,&
       SD_CWATER,SD_CPAR,SD_CSTEAM,SD_CFRUIT,SD_CLEAVES,SD_CBEEF,SD_CMILK,&
-	  SD_CAVE,SD_CEGG,SD_CFISH,SD_CGRAIN,SD_CWATERDER,SD_CWATEROTHER,SD_CSEDIMENT)
+	  SD_CAVE,SD_CEGG,SD_CFISH,SD_CGRAIN,SD_CWATERDER,SD_CWATEROTHER,SD_CSEDIMENT,KEY_SD)
 !
 !
       CALL READDATABASE (NVIAS,NIDADE,POLLUTANT,TYPE_POLLUTANT,RAD_POL,RfD,SF,SD_BTF,&
@@ -8549,7 +8173,7 @@
       GOTO 84
 !
 !	  ABRE-SE O ARQUIVO DE SAIDA E 'Exposure.out'
-	  OPEN(UNIT=33,FILE='Results\Doses, HQ and CR.json')
+	  OPEN(UNIT=33,FILE='Results\Health - Doses, HQ and CR.json')
 !
       nnc=NLOCAL
 !
@@ -11673,7 +11297,7 @@
       CALL CONCENTRATION(VARIASAO,NDURATION,NCHEM,NTYPECONC,CHEMICAL,&
 	  CSOIL,CWATER,CPAR,CSTEAM,CFRUIT,CLEAVES,CBEEF,CMILK,CAVE,CEGG,CFISH,CGRAIN,CWATERDER,CWATEROTHER,CSEDIMENT,&
 	  KEYCONC,NTIME,NLOCAL,TIMESP,&
-      SD_CSOIL,SD_CWATER,SD_CPAR,SD_CSTEAM,SD_CFRUIT,SD_CLEAVES,SD_CBEEF,SD_CMILK,SD_CAVE,SD_CEGG,SD_CFISH,SD_CGRAIN,SD_CWATERDER,SD_CWATEROTHER,SD_CSEDIMENT)
+      SD_CSOIL,SD_CWATER,SD_CPAR,SD_CSTEAM,SD_CFRUIT,SD_CLEAVES,SD_CBEEF,SD_CMILK,SD_CAVE,SD_CEGG,SD_CFISH,SD_CGRAIN,SD_CWATERDER,SD_CWATEROTHER,SD_CSEDIMENT,KEY_SD)
 !
 !	  
 	  DO k=1,NLOCAL
@@ -13042,7 +12666,7 @@
 !*********************************************************************************************************************************************************
 !*********************************************************************************************************************************************************
 !
-      SUBROUTINE ECOLOGICAL(SCENAR,VARIASAO,NDURATION,NCHEM,NTIME,NLOCAL,NTYPECONC,CHEMICAL,SCENARIES)
+      SUBROUTINE ECOLOGICAL(SCENAR,VARIASAO,NDURATION,NCHEM,NTIME,NLOCAL,NTYPECONC,CHEMICAL,SCENARIES,KEY_SD)
 !
       IMPLICIT DOUBLE PRECISION(A-H,O-Z)
 !
@@ -13050,7 +12674,7 @@
 	REAL MUL_RWind,MUL_CFwater,MPIwat,IPIT_water,MUL_CFsoil,mCd_soil,IPIT_soil,IGEOsoil,MAX_PIsoil,MAX_PIsed
 	REAL MUL_CFsed,mCd_sed,IPIT_sed,IGEOsed,mPELq,mERMq,Kd_MPI,MUL_RISKwat,MUL_RISKsoil,MUL_RISKsed,IRjFIN
 !
-	  LOGICAL KEYCONC
+	  LOGICAL KEYCONC,KEY_SD
 	   CHARACTER(LEN=50)  :: CHEMICAL(500),SPECIE(500),AGUA_REF(3),SOLO_REF(4),SED_REF(3),NOMES(500)
 	   CHARACTER(LEN=14)  :: SCENARIES(4)
 !
@@ -13070,15 +12694,15 @@
 !
       DIMENSION CFwater(NCHEM,0:NTIME,NLOCAL),RWind(NCHEM,NTIME,NLOCAL),MUL_CFwater(NTIME,NLOCAL),MPIwat(0:NTIME,NLOCAL)
 	  DIMENSION	MUL_RWind(NTIME,NLOCAL),RWcomb(0:NTIME,NLOCAL),PASS_RWind(NCHEM,NTIME,NLOCAL),CFwaterNAC(NCHEM,NTIME,NLOCAL)
-	  DIMENSION S_CFwaterNAC_water(NTIME,NLOCAL),IPIT_water(0:NTIME,NLOCAL)
+	  DIMENSION S_CFwaterNAC_water(NTIME,NLOCAL),IPIT_water(0:NTIME,NLOCAL),TEMP_PERIwater(NCHEM,NTIME,NLOCAL),PERIwater(0:NTIME,NLOCAL)
 	  DIMENSION	CFsoil(NCHEM,0:NTIME,NLOCAL),MUL_CFsoil(NTIME,NLOCAL),PLIsoil(0:NTIME,NLOCAL),SOMA_mCd_soil(NTIME,NLOCAL)
-	  DIMENSION mCd_soil(NTIME,NLOCAL),TEMP_PERIsoil(NCHEM,NTIME,NLOCAL),PERIsoil(NTIME,NLOCAL),CFsoilNAC(NCHEM,NTIME,NLOCAL)
+	  DIMENSION mCd_soil(NTIME,NLOCAL),TEMP_PERIsoil(NCHEM,NTIME,NLOCAL),PERIsoil(0:NTIME,NLOCAL),CFsoilNAC(NCHEM,NTIME,NLOCAL)
 	  DIMENSION S_CFsoilNAC_soil(NTIME,NLOCAL),IPIT_soil(NTIME,NLOCAL),IGEOsoil(NCHEM,NTIME,NLOCAL),PIsoil(NCHEM,NTIME,NLOCAL)
 	  DIMENSION EFCSOIL(0:NTIME,NLOCAL),EFCSEDIMENT(0:NTIME,NLOCAL),EFsoil(NCHEM,NTIME,NLOCAL),PINEWsoil(NTIME,NLOCAL)
 	  DIMENSION P1_PINEWsoil(NTIME,NLOCAL),P2_PINEWsoil(NTIME,NLOCAL),COPIA_PIsoil(NCHEM,NTIME,NLOCAL),MAX_PIsoil(NTIME,NLOCAL)
 !
 	  DIMENSION	CFsed(NCHEM,0:NTIME,NLOCAL),MUL_CFsed(NTIME,NLOCAL),PLIsed(0:NTIME,NLOCAL),SOMA_mCd_sed(NTIME,NLOCAL)
-	  DIMENSION mCd_sed(NTIME,NLOCAL),TEMP_PERIsed(NCHEM,NTIME,NLOCAL),PERIsed(NTIME,NLOCAL),CFsedNAC(NCHEM,NTIME,NLOCAL)
+	  DIMENSION mCd_sed(NTIME,NLOCAL),TEMP_PERIsed(NCHEM,NTIME,NLOCAL),PERIsed(0:NTIME,NLOCAL),CFsedNAC(NCHEM,NTIME,NLOCAL)
 	  DIMENSION S_CFsedNAC_sed(NTIME,NLOCAL),IPIT_sed(NTIME,NLOCAL),IGEOsed(NCHEM,NTIME,NLOCAL),PIsed(NCHEM,NTIME,NLOCAL)
 	  DIMENSION EFsed(NCHEM,NTIME,NLOCAL),PINEWsed(NTIME,NLOCAL),P1_PINEWsed(NTIME,NLOCAL),P2_PINEWsed(NTIME,NLOCAL)
 	  DIMENSION COPIA_PIsed(NCHEM,NTIME,NLOCAL),MAX_PIsed(NTIME,NLOCAL),mPELq(NTIME,NLOCAL),TEMP_mPELq(NCHEM,NTIME,NLOCAL)
@@ -13097,7 +12721,7 @@
       CALL CONCENTRATION(VARIASAO,NDURATION,NCHEM,NTYPECONC,CHEMICAL,&
 	  CSOIL,CWATER,CPAR,CSTEAM,CFRUIT,CLEAVES,CBEEF,CMILK,CAVE,CEGG,CFISH,CGRAIN,CWATERDER,CWATEROTHER,CSEDIMENT,&
 	  KEYCONC,NTIME,NLOCAL,TIMESP,&
-      SD_CSOIL,SD_CWATER,SD_CPAR,SD_CSTEAM,SD_CFRUIT,SD_CLEAVES,SD_CBEEF,SD_CMILK,SD_CAVE,SD_CEGG,SD_CFISH,SD_CGRAIN,SD_CWATERDER,SD_CWATEROTHER,SD_CSEDIMENT)
+      SD_CSOIL,SD_CWATER,SD_CPAR,SD_CSTEAM,SD_CFRUIT,SD_CLEAVES,SD_CBEEF,SD_CMILK,SD_CAVE,SD_CEGG,SD_CFISH,SD_CGRAIN,SD_CWATERDER,SD_CWATEROTHER,SD_CSEDIMENT,KEY_SD)
 !
 !
       CALL ECODATA(SCENAR,NSPECIE,SPECIE,WATREF,CROSTA,SOILREF,SEDREF,TEL,PEL,ERM,TIR,ALFA,BETA,SEDREFNAC,SOILREFNAC,WATREFNAC,KEY_WATER,KEY_SOIL,KEY_SEDIMENT)
@@ -13275,6 +12899,8 @@
 	  RWcomb(0,K)=0.0
 	  IPIT_water(J,K)=0.0
 	  IPIT_water(0,K)=0.0
+	  PERIwater(J,K)=0.0
+	  PERIwater(0,K)=0.0
 !
 	  MUL_CFsoil(J,K)=1.0
 	  PLIsoil(J,K)=0.0
@@ -13282,6 +12908,7 @@
 	  SOMA_mCd_soil(J,K)=0.0
 	  mCd_soil(J,K)=0.0
 	  PERIsoil(J,K)=0.0
+	  PERIwater(J,K)=0.0
 	  S_CFsoilNAC_soil(J,K)=0.0
 	  IPIT_soil(J,K)=0.0
 	  PINEWsoil(J,K)=0.0
@@ -13295,6 +12922,7 @@
 	  SOMA_mCd_sed(J,K)=0.0
 	  mCd_sed(J,K)=0.0
 	  PERIsed(J,K)=0.0
+	  PERIsed(0,K)=0.0
 	  S_CFsedNAC_sed(J,K)=0.0
 	  IPIT_sed(J,K)=0.0
 	  PINEWsed(J,K)=0.0
@@ -13327,6 +12955,7 @@
 	  CFwaterNAC(I,J,K)=0.0
 	  RWind(I,J,K)=0.0
 	  PASS_RWind(I,J,K)=0.0
+	  TEMP_PERIwater(I,J,K)=0.0
 !
 	  CFsoil(I,J,K)=0.0
 	  CFsoil(I,0,K)=0.0
@@ -13528,6 +13157,12 @@
       SUB_RISKwat(I,J,K)=1.0-TPICORwat(I,J,K)
 !
 	  MUL_RISKwat(J,K)=MUL_RISKwat(J,K)*SUB_RISKwat(I,J,K)
+!
+!-------------------------------------------------------------------
+!
+      TEMP_PERIwater(I,J,K)=CFwater(I,J,K)*TIR(iii)
+!
+      PERIwater(J,K)=PERIwater(J,K)+TEMP_PERIwater(I,J,K)
 !
 !-------------------------------------------------------------------
 !
@@ -14019,7 +13654,7 @@
 !	  IMPRESSÃO DOS DADOS DE SAÍDA
 !-----------------------------------------------------------
 !
-	  open (UNIT=68, file='Results\Individual.json')	
+	  open (UNIT=68, file='Results\Ecological - Single indexes.json')	
 !
 	  WRITE(68,'("{")')
 !
@@ -14140,7 +13775,7 @@
 !-----------------------------------------------------------
 !
 !
-	  open (UNIT=70, file='Results\Combined.json')	
+	  open (UNIT=70, file='Results\Ecological - Combined and integrated indexes.json')	
 !
       WRITE(70,'("{")')	 
 !
@@ -14162,7 +13797,7 @@
       DO k=1,NLOCAL
 	  DO j=NINICIO1,NDURATION
 !
-      IF((MPIwat(J,K).NE.MPIwat(J-1,K)).OR.(RWcomb(J,K).NE.RWcomb(J-1,K)).OR.(IPIT_water(J,K).NE.IPIT_water(J-1,K)))THEN
+      IF((MPIwat(J,K).NE.MPIwat(J-1,K)).OR.(PERIwater(J,K).NE.PERIwater(J-1,K)).OR.(IPIT_water(J,K).NE.IPIT_water(J-1,K)))THEN
       JALL1(k)=1
 	  ENDIF
 !
@@ -14181,8 +13816,8 @@
       WRITE(70,'("{")')	 
       write(70,'(A1,"Local",A1,":",1x,I3,",") )') aspas,aspas,K
       write(70,'(A1,"Time",A1,":",1x,I3,",") )') aspas,aspas,j
-      write(70,'(A1,"MPI",A1,":",1x,ES12.5,",") )') aspas,aspas,MPIwat(J,K)
-      write(70,'(A1,"Rw-comb",A1,":",1x,ES12.5,",") )') aspas,aspas,RWcomb(J,K)
+      write(70,'(A1,"PLI",A1,":",1x,ES12.5,",") )') aspas,aspas,MPIwat(J,K)
+      write(70,'(A1,"PERI",A1,":",1x,ES12.5,",") )') aspas,aspas,PERIwater(J,K)
 	  write(70,'(A1,"IPIth",A1,":",1x,ES12.5) )') aspas,aspas,IPIT_water(J,K)
       IF((J.EQ.NDURATION).and.(K.EQ.NLOCAL))THEN
 	  WRITE(70,'("}")')
@@ -14195,8 +13830,8 @@
       WRITE(70,'("{")')
       write(70,'(A1,"Local",A1,":",1x,I3,",") )') aspas,aspas,K
       write(70,'(A1,"Time",A1,":",1x,A1,"All",A1,",") )') aspas,aspas,aspas,aspas
-      write(70,'(A1,"MPI",A1,":",1x,ES12.5,",") )') aspas,aspas,MPIwat(J,K)
-      write(70,'(A1,"Rw-comb",A1,":",1x,ES12.5,",") )') aspas,aspas,RWcomb(J,K)
+      write(70,'(A1,"PLI",A1,":",1x,ES12.5,",") )') aspas,aspas,MPIwat(J,K)
+      write(70,'(A1,"PERI",A1,":",1x,ES12.5,",") )') aspas,aspas,PERIwater(J,K)
 	  write(70,'(A1,"IPIth",A1,":",1x,ES12.5) )') aspas,aspas,IPIT_water(J,K)
       IF((J.EQ.1).and.(K.EQ.NLOCAL))THEN
 	  WRITE(70,'("}")')
