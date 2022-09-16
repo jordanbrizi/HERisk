@@ -27,16 +27,16 @@ const createWindow = () => {
 		webPreferences: {
 			nodeIntegration: true
 		}
-	})	
+	})
 
 	win.loadURL(`file://${__dirname}/index.html`)
-	
+
 	win.once('ready-to-show', () => win.show())
-	
+
 	Menu.setApplicationMenu(null)
-	
-	// win.openDevTools()
-	
+
+	// process.env.NODE_ENV === 'development' && win.openDevTools()
+
 	// ABRIR A JANELA DO VÍDEO DE APRESENTAÇÃO ---------------------------------
 	ipcMain.on('how_to', () => {
 		const winHowto = new BrowserWindow({
@@ -54,91 +54,91 @@ const createWindow = () => {
 		winHowto.show()
 	})
 
-	// ABRIR O GUIA EM PDF -----------------------------------------------------
-	.on('guide', () => {
-		const winGuide = new BrowserWindow({
-			width: 1024,
-			height: 640,
-			backgroundColor: '#23272A',
-			resizable: true,
-			show: false,
-			icon: __dirname + '/favicon.ico'
+		// ABRIR O GUIA EM PDF -----------------------------------------------------
+		.on('guide', () => {
+			const winGuide = new BrowserWindow({
+				width: 1024,
+				height: 640,
+				backgroundColor: '#23272A',
+				resizable: true,
+				show: false,
+				icon: __dirname + '/favicon.ico'
+			})
+			winGuide.loadURL(appPath + 'bin/HERisk.pdf')
+			winGuide.show()
 		})
-		winGuide.loadURL(appPath + 'bin/HERisk.pdf')
-		winGuide.show()
-	})
 
-	// SALVAR O GUIA EM DOCX ---------------------------------------------------
-	.on('guideSave', () => {
-		const options = {
-			defaultPath: app.getPath('documents'),
-			properties: ['openDirectory']
-		}
-		dialog.showOpenDialog(options).then((response) => {
-			if (response.canceled === false) {
-				const old = path.resolve(appPath + 'bin\\HERisk.docx')
-				const nFile = path.resolve(response.filePaths + '\\HERisk.docx')
-				fs.copyFile(old, nFile, () => {
-					require('child_process')
-						.exec(`start "" "${response.filePaths}"`)
-				})
+		// SALVAR O GUIA EM DOCX ---------------------------------------------------
+		.on('guideSave', () => {
+			const options = {
+				defaultPath: app.getPath('documents'),
+				properties: ['openDirectory']
 			}
-		}).catch(err => {
-			event.sender.send('responseError', err)
-		})
-	})
-	
-	// SALVAR O ARQUIVO INPUT --------------------------------------------------
-	.on('inputSave', () => {
-		const options = {
-			defaultPath: app.getPath('documents'),
-			properties: ['openDirectory']
-		}
-		dialog.showOpenDialog(options).then((response) => {
-			if (response.canceled === false) {
-				const old = path.resolve(appPath + 'bin\\input.xlsm')
-				const nFile = path.resolve(response.filePaths + '\\input.xlsm')
-				fs.copyFile(old, nFile, () => {
-					require('child_process')
-						.exec(`start "" "${response.filePaths}"`)
-				})
-			}
-		}).catch(err => {
-			event.sender.send('responseError', err)
-		})
-	})
-
-	// ENVIAR ARQUIVO DE INPUT ATUALIZADO PARA A PASTA DO APP ------------------
-	.on('inputUp', (event, arg) => {
-		const options = {
-			defaultPath: app.getPath('documents'),
-			properties: ['openFile'],
-			filters: [
-				{
-					name: 'Excel Open XML Macro-Enabled Spreadsheet',
-					extensions: ['xlsm']
+			dialog.showOpenDialog(options).then((response) => {
+				if (response.canceled === false) {
+					const old = path.resolve(appPath + 'bin\\HERisk.docx')
+					const nFile = path.resolve(response.filePaths + '\\HERisk.docx')
+					fs.copyFile(old, nFile, () => {
+						require('child_process')
+							.exec(`start "" "${response.filePaths}"`)
+					})
 				}
-			]
-		}
-		dialog.showOpenDialog(options).then((response) => {
-			if (response.canceled === false) {
-				const old = path.resolve(response.filePaths[0])
-				const nFile = path.resolve(appPath + 'bin\\input.xlsm')
-				fs.copyFile(old, nFile, () => {
-					const messages = {
-						default: "File updated successfully.",
-						br: "Arquivo atualizado com sucesso."
-					}
-					event.sender.send('responseSuccess', messages[arg])
-				})
-			}
-		}).catch(err => {
-			event.sender.send('responseError', err)
+			}).catch(err => {
+				event.sender.send('responseError', err)
+			})
 		})
-	})
 
-	// SAIR DO APLICATIVO ------------------------------------------------------
-	.on('sair', () => app.quit())
+		// SALVAR O ARQUIVO INPUT ----------------------------------------------
+		.on('inputSave', () => {
+			const options = {
+				defaultPath: app.getPath('documents'),
+				properties: ['openDirectory']
+			}
+			dialog.showOpenDialog(options).then((response) => {
+				if (response.canceled === false) {
+					const old = path.resolve(appPath + 'bin\\input.xlsm')
+					const nFile = path.resolve(response.filePaths + '\\input.xlsm')
+					fs.copyFile(old, nFile, () => {
+						require('child_process')
+							.exec(`start "" "${response.filePaths}"`)
+					})
+				}
+			}).catch(err => {
+				event.sender.send('responseError', err)
+			})
+		})
+
+		// ENVIAR ARQUIVO DE INPUT ATUALIZADO PARA A PASTA DO APP --------------
+		.on('inputUp', (event, arg) => {
+			const options = {
+				defaultPath: app.getPath('documents'),
+				properties: ['openFile'],
+				filters: [
+					{
+						name: 'Excel Open XML Macro-Enabled Spreadsheet',
+						extensions: ['xlsm']
+					}
+				]
+			}
+			dialog.showOpenDialog(options).then((response) => {
+				if (response.canceled === false) {
+					const old = path.resolve(response.filePaths[0])
+					const nFile = path.resolve(appPath + 'bin\\input.xlsm')
+					fs.copyFile(old, nFile, () => {
+						const messages = {
+							default: "File updated successfully.",
+							br: "Arquivo atualizado com sucesso."
+						}
+						event.sender.send('responseSuccess', messages[arg])
+					})
+				}
+			}).catch(err => {
+				event.sender.send('responseError', err)
+			})
+		})
+
+		// SAIR DO APLICATIVO ------------------------------------------------------
+		.on('sair', () => app.quit())
 
 	// -------------------------------------------------------------------------
 	// -------------------------------------------------------------------------
@@ -272,7 +272,7 @@ const createWindow = () => {
 				})
 				require('child_process')
 					.exec(`start "" "${response.filePaths}"`)
-				
+
 			} else {
 				event.sender.send('responseError', messages[arg][3])
 			}

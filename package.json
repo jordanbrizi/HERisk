@@ -9,7 +9,7 @@
 		"fortran"
 	],
 	"main": "./ui/main.js",
-	"version": "1.0.8",
+	"version": "1.1.0",
 	"author": "Britus",
 	"scripts": {
 		"start": "electron .",
@@ -19,6 +19,7 @@
 		"asar": false,
 		"icon": "ui/favicon.ico",
 		"target": "NSIS",
+		"node_env": "production",
 		"nsis": {
 			"oneClick": false
 		}
