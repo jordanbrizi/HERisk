@@ -2,14 +2,9 @@
 	"name": "herisk",
 	"productName": "HERisk",
 	"description": "Programa de cálculo de risco.",
-	"keywords": [
-		"herisk",
-		"electron",
-		"nodejs",
-		"fortran"
-	],
+	"keywords": ["herisk", "electron", "nodejs", "fortran"],
 	"main": "./ui/main.js",
-	"version": "1.0.11",
+	"version": "1.1.01",
 	"author": "Britus",
 	"scripts": {
 		"start": "electron .",
