@@ -2,7 +2,12 @@
 	"name": "herisk",
 	"productName": "HERisk",
 	"description": "Programa de cálculo de risco.",
-	"keywords": ["herisk", "electron", "nodejs", "fortran"],
+	"keywords": [
+		"herisk",
+		"electron",
+		"nodejs",
+		"fortran"
+	],
 	"main": "./ui/main.js",
 	"version": "1.2.0",
 	"author": "Britus",
@@ -14,7 +19,6 @@
 		"asar": false,
 		"icon": "ui/favicon.ico",
 		"target": "NSIS",
-		"node_env": "production",
 		"nsis": {
 			"oneClick": false
 		}
