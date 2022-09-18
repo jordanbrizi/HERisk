@@ -2,12 +2,7 @@
 	"name": "herisk",
 	"productName": "HERisk",
 	"description": "Programa de cálculo de risco.",
-	"keywords": [
-		"herisk",
-		"electron",
-		"nodejs",
-		"fortran"
-	],
+	"keywords": ["herisk", "electron", "nodejs", "fortran"],
 	"main": "./ui/main.js",
 	"version": "1.2.0",
 	"author": "Britus",
@@ -26,7 +21,7 @@
 	},
 	"devDependencies": {
 		"bootstrap": "^4.5.2",
-		"electron": "9.0.2",
+		"electron": "15.5.5",
 		"electron-builder": "^22.8.0"
 	},
 	"repository": {
@@ -43,6 +38,6 @@
 		"react-dom": "^16.13.1",
 		"react-transition-group": "^4.4.1",
 		"reactstrap": "^8.5.1",
-		"xlsx": "^0.16.4"
+		"xlsx": "^0.17.0"
 	}
 }
