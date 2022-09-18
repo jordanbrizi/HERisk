@@ -112,7 +112,7 @@ const createWindow = () => {
 
 	Menu.setApplicationMenu(null)
 
-	process.env.NODE_ENV === 'development' && win.openDevTools()
+	// process.env.NODE_ENV === 'development' && win.openDevTools()
 
 	// ABRIR A JANELA DO VÍDEO DE APRESENTAÇÃO ---------------------------------
 	ipcMain
