@@ -11,6 +11,83 @@ class Resultados {
 	txts = () => this.Arquivos().filter(a => a.includes('.txt'))
 }
 
+const GerarODS = async (event, arg) => {
+	let Obter = new Resultados()
+	const messages = {
+		default: [
+			'Generating ODS files.',
+			'Select Folder',
+			'ODS files has been generated.',
+			'Canceled by user.'
+		],
+		br: [
+			'Gerando arquivos ODS.',
+			'Selecionar pasta',
+			'As planilhas ODS foram geradas.',
+			'Cancelado pelo usuário.'
+		]
+	}
+	event.sender.send('responseSuccess', messages[arg][0])
+	const xlsx = require('xlsx')
+	const planilhas = []
+	const options = {
+		title: messages[arg][1],
+		defaultPath: app.getPath('documents'),
+		properties: ['openDirectory']
+	}
+	Obter.jsons().forEach(async json => {
+		fs.readFile(path.resolve(resultsPath + json), (err, data) => {
+			let arquivo = JSON.parse(data)
+			const chaves = Object.keys(arquivo)
+			const wb = xlsx.utils.book_new()
+
+			chaves.forEach(chave => {
+				//LIMITA OS TÍTULOS PARA ATÉ 31 CARACTERES
+				const chaveNew = chave.substring(0, 28) + '...'
+				const keys = Object.keys(arquivo[chave][0])
+				const header = [{ chave: chave }]
+				const ws = xlsx.utils.json_to_sheet(header, { skipHeader: true })
+				xlsx.utils.sheet_add_json(ws, arquivo[chave], { origin: "A2" })
+				const merge =
+					[{ s: { r: 0, c: 0 }, e: { r: 0, c: (keys.length - 1) } }]
+				ws["!merges"] = merge
+				xlsx.utils.book_append_sheet(wb, ws, chaveNew)
+			})
+			const sheetName = `\\${json.replace('.json', '')}.ods`
+			xlsx.writeFile(wb, resultsPath + sheetName)
+			planilhas.push(sheetName)
+		})
+	})
+
+	event.sender.send('responseSuccess', messages[arg][2])
+
+	// ABRIR O DIÁLOGO DE SELEÇÃO DE PASTA
+	dialog.showOpenDialog(options)
+		.then((response) => {
+			if (response.canceled === true) {
+				return event.sender.send('responseError', messages[arg][3])
+			}
+			planilhas.forEach(sheet => {
+				const oldPath = path.resolve(resultsPath + sheet)
+				const newPath = path.resolve(response.filePaths + sheet)
+				fs.rename(oldPath, newPath, err => {
+					if (err) throw err
+				})
+			})
+			Obter.txts().forEach(txt => {
+				const oldPath = path.resolve(resultsPath + txt)
+				const newPath = path.resolve(response.filePaths + `\\${txt}`)
+				fs.copyFile(oldPath, newPath, err => {
+					if (err) throw err
+				})
+			})
+			require('child_process').exec(`start "" "${response.filePaths}"`)
+		})
+		.catch(err => {
+			console.log(err)
+		})
+}
+
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
@@ -35,24 +112,25 @@ const createWindow = () => {
 
 	Menu.setApplicationMenu(null)
 
-	// process.env.NODE_ENV === 'development' && win.openDevTools()
+	process.env.NODE_ENV === 'development' && win.openDevTools()
 
 	// ABRIR A JANELA DO VÍDEO DE APRESENTAÇÃO ---------------------------------
-	ipcMain.on('how_to', () => {
-		const winHowto = new BrowserWindow({
-			width: 1006,
-			height: 595,
-			backgroundColor: '#23272A',
-			resizable: false,
-			show: false,
-			icon: __dirname + '/favicon.ico',
-			webPreferences: {
-				nodeIntegration: true
-			}
+	ipcMain
+		.on('how_to', () => {
+			const winHowto = new BrowserWindow({
+				width: 1006,
+				height: 595,
+				backgroundColor: '#23272A',
+				resizable: false,
+				show: false,
+				icon: __dirname + '/favicon.ico',
+				webPreferences: {
+					nodeIntegration: true
+				}
+			})
+			winHowto.loadURL('https://www.youtube.com/embed/w3-UVmYQrmM')
+			winHowto.show()
 		})
-		winHowto.loadURL('https://www.youtube.com/embed/w3-UVmYQrmM')
-		winHowto.show()
-	})
 
 		// ABRIR O GUIA EM PDF -----------------------------------------------------
 		.on('guide', () => {
@@ -137,44 +215,48 @@ const createWindow = () => {
 			})
 		})
 
-		// SAIR DO APLICATIVO ------------------------------------------------------
+		// SAIR DO APLICATIVO --------------------------------------------------
 		.on('sair', () => app.quit())
 
-	// -------------------------------------------------------------------------
-	// -------------------------------------------------------------------------
+		// ---------------------------------------------------------------------
+		// ---------------------------------------------------------------------
 
-	ipcMain.on('execute', (event, arg) => {
-		Obter = new Resultados
-		const messages = {
-			default: [
-				'HERisk is running...',
-				'Cleaning the results folder...',
-				'An error occurred in ### sheet. Please check the data entered and try again.',
-				'A value of 0 was inserted in some field. Please check the entered values.',
-				'Successfully executed.'
-			],
-			br: [
-				'HERisk está sendo executado...',
-				'Limpando os resultados anteriores...',
-				'Ocorreu um erro na planilha ###. Por favor, verifique os dados inseridos e tente novamente.',
-				'Um valor 0 ou nulo foi inserido em algum campo. Por favor, verifique os dados inseridos e tente novamente.',
-				'Executado com sucesso.'
-			]
-		}
-		event.sender.send('responseSuccess', messages[arg][0])
-		const child = require('child_process')
-		const herisk_exe = appPath + 'bin\\HERisk.exe'
+		.on('execute', async (event, arg) => {
+			let Obter = new Resultados
+			const messages = {
+				default: [
+					'HERisk is running...',
+					'Cleaning the results folder...',
+					'An error occurred in ### sheet. Please check the data entered and try again.',
+					'A value of 0 was inserted in some field. Please check the entered values.',
+					'Successfully executed.'
+				],
+				br: [
+					'HERisk está sendo executado...',
+					'Limpando os resultados anteriores...',
+					'Ocorreu um erro na planilha ###. Por favor, verifique os dados inseridos e tente novamente.',
+					'Um valor 0 ou nulo foi inserido em algum campo. Por favor, verifique os dados inseridos e tente novamente.',
+					'Executado com sucesso.'
+				]
+			}
+			event.sender.send('responseSuccess', messages[arg][0])
+			const child = require('child_process')
+			const herisk_exe = appPath + 'bin\\HERisk.exe'
 
-		// LIMPA A PASTA RESULTS
-		event.sender.send('responseSuccess', messages[arg][1])
-		if (Obter.jsons().length > 0) {
-			Obter.jsons().forEach(json => fs.unlinkSync(resultsPath + json))
-		}
-		if (Obter.txts().length > 0) {
-			Obter.txts().forEach(txt => fs.unlinkSync(resultsPath + txt))
-		}
-		child.exec(herisk_exe, { "cwd": appPath + "bin" }, (err, data, stderr) => {
-			if (err) {
+			// LIMPA A PASTA RESULTS
+			event.sender.send('responseSuccess', messages[arg][1])
+			if (Obter.jsons().length > 0) {
+				Obter.jsons().forEach(json => fs.unlinkSync(resultsPath + json))
+			}
+			if (Obter.txts().length > 0) {
+				Obter.txts().forEach(txt => fs.unlinkSync(resultsPath + txt))
+			}
+			child.exec(herisk_exe, { "cwd": appPath + "bin" }, (err, data, stderr) => {
+				if (!err) {
+					event.sender.send('responseSuccess', messages[arg][4])
+					return GerarODS(event, arg)
+				}
+
 				event.sender.send('responseError', stderr)
 				const prns = [
 					"Concentration",
@@ -194,92 +276,8 @@ const createWindow = () => {
 				if (erro.length > 0) {
 					event.sender.send('responseError', messages[arg][3])
 				}
-			} else {
-				event.sender.send('responseSuccess', messages[arg][4])
-			}
-		})
-	})
-
-	// -------------------------------------------------------------------------
-	// -------------------------------------------------------------------------
-
-	ipcMain.on('gerarOds', (event, arg) => {
-		let Obter = new Resultados()
-		const messages = {
-			default: [
-				'Generating ODS files.',
-				'Select Folder',
-				'ODS files has been generated.',
-				'Canceled by user.'
-			],
-			br: [
-				'Gerando arquivos ODS.',
-				'Selecionar pasta',
-				'As planilhas ODS foram geradas.',
-				'Cancelado pelo usuário.'
-			]
-		}
-		event.sender.send('responseSuccess', messages[arg][0])
-		const xlsx = require('xlsx')
-		const planilhas = []
-		const options = {
-			title: messages[arg][1],
-			defaultPath: app.getPath('documents'),
-			properties: ['openDirectory']
-		}
-		Obter.jsons().forEach(json => {
-			fs.readFile(path.resolve(resultsPath + json), (err, data) => {
-				let arquivo = JSON.parse(data)
-				const chaves = Object.keys(arquivo)
-				const wb = xlsx.utils.book_new()
-
-				chaves.forEach(chave => {
-					//LIMITA OS TÍTULOS PARA ATÉ 31 CARACTERES
-					const chaveNew = chave.substring(0, 28) + '...'
-					const keys = Object.keys(arquivo[chave][0])
-					const header = [{ chave: chave }]
-					const ws = xlsx.utils.json_to_sheet(header, { skipHeader: true })
-					xlsx.utils.sheet_add_json(ws, arquivo[chave], { origin: "A2" })
-					const merge =
-						[{ s: { r: 0, c: 0 }, e: { r: 0, c: (keys.length - 1) } }]
-					ws["!merges"] = merge
-					xlsx.utils.book_append_sheet(wb, ws, chaveNew)
-				})
-				const sheetName = `\\${json.replace('.json', '')}.ods`
-				xlsx.writeFile(wb, resultsPath + sheetName)
-				planilhas.push(sheetName)
 			})
 		})
-
-		event.sender.send('responseSuccess', messages[arg][2])
-
-		// ABRIR O DIÁLOGO DE SELEÇÃO DE PASTA
-		dialog.showOpenDialog(options).then((response) => {
-			if (response.canceled === false) {
-				planilhas.forEach(sheet => {
-					const oldPath = path.resolve(resultsPath + sheet)
-					const newPath = path.resolve(response.filePaths + sheet)
-					fs.rename(oldPath, newPath, err => {
-						if (err) throw err
-					})
-				})
-				Obter.txts().forEach(txt => {
-					const oldPath = path.resolve(resultsPath + txt)
-					const newPath = path.resolve(response.filePaths + `\\${txt}`)
-					fs.copyFile(oldPath, newPath, err => {
-						if (err) throw err
-					})
-				})
-				require('child_process')
-					.exec(`start "" "${response.filePaths}"`)
-
-			} else {
-				event.sender.send('responseError', messages[arg][3])
-			}
-		}).catch(err => {
-			console.log(err)
-		})
-	})
 }
 
 // -----------------------------------------------------------------------------
