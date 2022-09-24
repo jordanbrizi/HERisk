@@ -1,8 +1,0 @@
-node_modules
-out
-.vscode
-dist
-*.lock
-bin/Results/*.json
-bin/Results/*.ods
-bin/Results/*.txt
