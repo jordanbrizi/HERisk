@@ -116,6 +116,12 @@
 		REAL*8, DIMENSION (:,:), ALLOCATABLE :: SD_CRcum_tot
 !
 	REAL*8, DIMENSION (:,:,:,:,:), ALLOCATABLE :: PORCENTAGEM
+	REAL*8, DIMENSION (:), ALLOCATABLE :: COPIA_PORCENTAGEM
+    REAL*8, DIMENSION (:,:,:,:), ALLOCATABLE :: PORCENTAGEM_SOMA
+    REAL*8, DIMENSION (:,:,:,:), ALLOCATABLE :: PORC_MEDIA
+	REAL*8, DIMENSION (:,:,:,:), ALLOCATABLE :: PORC_MEDIA2
+    REAL*8, DIMENSION (:,:,:,:), ALLOCATABLE :: PORC_MAX
+	REAL*8, DIMENSION (:,:,:,:), ALLOCATABLE :: PORC_MIN
 !
 !
 	REAL*8, DIMENSION (:,:,:,:), ALLOCATABLE :: HQ_tot
@@ -338,6 +344,12 @@
 		ALLOCATE (SD_CRcum_tot(NIDADE,NLOCAL))
 !
 	ALLOCATE (PORCENTAGEM(2,NIDADE,NCHEM,NTIME,NLOCAL))	
+	ALLOCATE (COPIA_PORCENTAGEM(NLOCAL))
+	ALLOCATE (PORCENTAGEM_SOMA(2,NIDADE,NTIME,NLOCAL))	
+	ALLOCATE (PORC_MEDIA(2,NIDADE,NTIME,NLOCAL))
+	ALLOCATE (PORC_MEDIA2(2,NIDADE,NTIME,NLOCAL))
+	ALLOCATE (PORC_MAX(2,NIDADE,NTIME,NLOCAL))
+	ALLOCATE (PORC_MIN(2,NIDADE,NTIME,NLOCAL))
 !
 !
 	ALLOCATE (HQ_tot(NIDADE,NVIAS,NTIME,NLOCAL))
@@ -1293,15 +1305,55 @@
 	  ELSE
 	  PORCENTAGEM(2,l,i,JOP,KP)=0.0
 	  ENDIF
+!
+      PORCENTAGEM_SOMA(1,l,JOP,KP)=0.0
+	  PORCENTAGEM_SOMA(2,l,JOP,KP)=0.0
+!
+      DO KL=1,2
+      PORC_MEDIA2(KL,l,i,JOP)=PORC_MEDIA2(KL,l,i,JOP)+PORCENTAGEM(KL,l,i,JOP,KP)
+	  ENDDO
+
 	  ENDDO
 	  ENDDO
 	  ENDDO
 	  ENDDO
+!	  
+      DO KL=1,2 
+      DO l=1,NIDADE
+	  DO i=1,JIJ
+	  DO JOP=1,NTIMEexp	  
+	  PORC_MEDIA(KL,l,i,JOP)=PORC_MEDIA2(KL,l,i,JOP)/NLOCAL
+	  DO KP=1,NLOCAL 
+	  COPIA_PORCENTAGEM(KP)=PORCENTAGEM(KL,l,i,JOP,KP)
+	  ENDDO
+	  PORC_MAX(KL,l,i,JOP)=MAXVAL(COPIA_PORCENTAGEM)
+	  PORC_MIN(KL,l,i,JOP)=MINVAL(COPIA_PORCENTAGEM)
+	  ENDDO
+	  ENDDO
+	  ENDDO
+	  ENDDO
+!
 !
 	  WRITE(55,'("{")')	 
 !
 	  WRITE(55,'(A1,"Non-carcinogenic risks contribution (%) of each chemical species",A1,": [")')aspas,aspas            
 ! 
+	  NHPO=1
+!
+      DO l=1,NIDADE 
+	  DO KO=1,NLOCAL
+	  DO IOO=1,JIJ
+!
+	  PORCENTAGEM_SOMA(2,l,1,KO)=PORCENTAGEM_SOMA(2,l,1,KO)+PORCENTAGEM(2,l,IOO,1,KO)
+!
+      ENDDO	! FIM DO IOO=1,JIJ
+!
+	  IF(PORCENTAGEM_SOMA(2,l,1,KO).GT.10.0)THEN	  !FOI COLOCADO <10 E NÃO 0 PARA EVITAR QUE ALGUM ERRO DEIXASSE O VALOR DIFERENTE DE 0 E A FUNÇÃO NÃO FUNCIONASSE
+      NHPO=l
+	  ENDIF
+! 
+	  ENDDO	  ! FIM DO KO=1,NLOCAL
+	  ENDDO	  ! FIM DO l=1,NIDADE
 !
       DO KO=1,NLOCAL
 !	
@@ -1309,18 +1361,58 @@
       write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
 	  DO IOO=1,JIJ
 	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,5,IOO,1,KO)
+      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,NHPO,IOO,1,KO)
 	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,5,IOO,1,KO)
+      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(2,NHPO,IOO,1,KO)
 	  ENDIF
 	  ENDDO
-	  IF(KO.NE.NLOCAL)THEN
+!
 	  WRITE(55,'("},")')!
-	  ELSE
-	  WRITE(55,'("}")')!
-	  ENDIF
 !
 	  ENDDO	  ! FIM DO KO=1,NLOCAL
+!	
+	  WRITE(55,'("{")')
+      write(55,'(A1,"Local",A1,":",A1," ",A1)')aspas,aspas,aspas,aspas
+	  WRITE(55,'("},")')!
+
+	  WRITE(55,'("{")')
+      write(55,'(A1,"Local",A1,":",A1,"Minimum values",A1)')aspas,aspas,aspas,aspas
+	  WRITE(55,'("},")')!
+	  WRITE(55,'("{")')
+	  DO IOO=1,JIJ
+	  IF(IOO.NE.JIJ)THEN
+      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORC_MIN(2,NHPO,IOO,1)
+	  ELSE
+      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORC_MIN(2,NHPO,IOO,1)
+	  ENDIF
+	  ENDDO
+	  WRITE(55,'("},")')!
+!
+	  WRITE(55,'("{")')
+      write(55,'(A1,"Local",A1,":",A1,"Mean values",A1)')aspas,aspas,aspas,aspas
+	  WRITE(55,'("},")')!
+	  WRITE(55,'("{")')
+	  DO IOO=1,JIJ
+	  IF(IOO.NE.JIJ)THEN
+      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORC_MEDIA(2,NHPO,IOO,1)
+	  ELSE
+      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORC_MEDIA(2,NHPO,IOO,1)
+	  ENDIF
+	  ENDDO
+	  WRITE(55,'("},")')!
+!
+ 	  WRITE(55,'("{")')
+      write(55,'(A1,"Local",A1,":",A1,"Maximum values",A1)')aspas,aspas,aspas,aspas
+	  WRITE(55,'("},")')!
+	  WRITE(55,'("{")')
+	  DO IOO=1,JIJ
+	  IF(IOO.NE.JIJ)THEN
+      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORC_MAX(2,NHPO,IOO,1)
+	  ELSE
+      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORC_MAX(2,NHPO,IOO,1)
+	  ENDIF
+	  ENDDO
+	  WRITE(55,'("}")')!
 !
 	  WRITE(55,'("],")')
 !
@@ -1329,25 +1421,82 @@
 !
 	  WRITE(55,'(A1,"Carcinogenic risks contribution (%) of each chemical species",A1,": [")')aspas,aspas            
 !
-      DO KO=1,NLOCAL
+	  IHPO=1
 !
+      DO l=1,NIDADE 
+	  DO KO=1,NLOCAL
+	  DO IOO=1,JIJ
+!
+	  PORCENTAGEM_SOMA(1,l,1,KO)=PORCENTAGEM_SOMA(1,l,1,KO)+PORCENTAGEM(1,l,IOO,1,KO)
+!
+      ENDDO	! FIM DO IOO=1,JIJ
+!
+	  IF(PORCENTAGEM_SOMA(1,l,1,KO).GT.10.0)THEN	  !FOI COLOCADO <10 E NÃO 0 PARA EVITAR QUE ALGUM ERRO DEIXASSE O VALOR DIFERENTE DE 0 E A FUNÇÃO NÃO FUNCIONASSE
+      IHPO=l
+	  ENDIF
+! 
+	  ENDDO	  ! FIM DO KO=1,NLOCAL
+	  ENDDO	  ! FIM DO l=1,NIDADE
+
+!
+      DO KO=1,NLOCAL
+!	
 	  WRITE(55,'("{")')
       write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
 	  DO IOO=1,JIJ
 	  IF(IOO.NE.JIJ)THEN
-      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,5,IOO,1,KO)
+      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,IHPO,IOO,1,KO)
 	  ELSE
-      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,5,IOO,1,KO)
+      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORCENTAGEM(1,IHPO,IOO,1,KO)
 	  ENDIF
 	  ENDDO
 !
-	  IF(KO.NE.NLOCAL)THEN
 	  WRITE(55,'("},")')!
-	  ELSE
-	  WRITE(55,'("}")')!
-	  ENDIF
 !
 	  ENDDO	  ! FIM DO KO=1,NLOCAL
+!	
+	  WRITE(55,'("{")')
+      write(55,'(A1,"Local",A1,":",A1," ",A1)')aspas,aspas,aspas,aspas
+	  WRITE(55,'("},")')!
+
+	  WRITE(55,'("{")')
+      write(55,'(A1,"Local",A1,":",A1,"Minimum values",A1)')aspas,aspas,aspas,aspas
+	  WRITE(55,'("},")')!
+	  WRITE(55,'("{")')
+	  DO IOO=1,JIJ
+	  IF(IOO.NE.JIJ)THEN
+      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORC_MIN(1,IHPO,IOO,1)
+	  ELSE
+      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORC_MIN(1,IHPO,IOO,1)
+	  ENDIF
+	  ENDDO
+	  WRITE(55,'("},")')!
+!
+	  WRITE(55,'("{")')
+      write(55,'(A1,"Local",A1,":",A1,"Mean values",A1)')aspas,aspas,aspas,aspas
+	  WRITE(55,'("},")')!
+	  WRITE(55,'("{")')
+	  DO IOO=1,JIJ
+	  IF(IOO.NE.JIJ)THEN
+      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORC_MEDIA(1,IHPO,IOO,1)
+	  ELSE
+      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORC_MEDIA(1,IHPO,IOO,1)
+	  ENDIF
+	  ENDDO
+	  WRITE(55,'("},")')!
+!
+ 	  WRITE(55,'("{")')
+      write(55,'(A1,"Local",A1,":",A1,"Maximum values",A1)')aspas,aspas,aspas,aspas
+	  WRITE(55,'("},")')!
+	  WRITE(55,'("{")')
+	  DO IOO=1,JIJ
+	  IF(IOO.NE.JIJ)THEN
+      write(55,'(A1,A10,A1,":",1X,ES10.3,",")') aspas,NOMES(IOO),aspas,PORC_MAX(1,IHPO,IOO,1)
+	  ELSE
+      write(55,'(A1,A10,A1,":",1X,ES10.3)') aspas,NOMES(IOO),aspas,PORC_MAX(1,IHPO,IOO,1)
+	  ENDIF
+	  ENDDO
+	  WRITE(55,'("}")')!
 !
 	  WRITE(55,'("],")')
 !
@@ -1372,11 +1521,13 @@
 	  PORC_VIA_C(l,n,j,k)=0.0
 	  ENDIF
 !
-      ENDDO
-	  ENDDO
-	  ENDDO
+!
 	  ENDDO
 !
+	  ENDDO
+	  ENDDO
+	  ENDDO
+!	   
 !
 !
       DO KO=1,NLOCAL
@@ -1385,9 +1536,9 @@
       write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
 	  DO KP=1,NVIAS
 	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_NC(5,KP,1,KO)
+      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_NC(NHPO,KP,1,KO)
 	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_NC(5,KP,1,KO)
+      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_NC(NHPO,KP,1,KO)
 	  ENDIF
 	  ENDDO
 !
@@ -1398,6 +1549,7 @@
 	  ENDIF
 !
 	  ENDDO	  ! FIM DO KO=1,NLOCAL
+!
 !
 	  WRITE(55,'("],")')
 !
@@ -1412,12 +1564,11 @@
 !
 	  WRITE(55,'("{")')	
       write(55,'(A1,"Local",A1,":",1x,I3,",")') aspas,aspas,KO
-      write(55,'(A1,"Age groups",A1,":",1X,A1,"16 to <18",A1,",")') aspas,aspas,aspas,aspas
 	  DO KP=1,NVIAS
 	  IF(KP.NE.14)THEN
-      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_C(6,KP,1,KO)
+      write(55,'(A1,A22,A1,":",1X,ES10.3,",")') aspas,nomevias(KP),aspas,PORC_VIA_C(IHPO,KP,1,KO)
 	  ELSE
-      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_C(6,KP,1,KO)
+      write(55,'(A1,A22,A1,":",1X,ES10.3)') aspas,nomevias(KP),aspas,PORC_VIA_C(IHPO,KP,1,KO)
 	  ENDIF
 	  ENDDO
 !

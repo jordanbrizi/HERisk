@@ -1,0 +1,21 @@
+{
+	"CHANGE_LANG": "Alterar a língua",
+	"EXECUTE": "EXECUTAR",
+	"EXECUTE_TITLE": "Execute the HERisk",
+	"INPUT_DATA": "Inserir os dados",
+	"INPUT_DATA_TITLE": "Abrir a planilha para inserir os dados",
+	"DOWNLOAD_INPUT": "Salvar o input.xlsm",
+	"UPLOAD_INPUT": "Enviar o input.xlsm",
+	"HOW_TO_USE": "Como usar",
+	"HOW_TO_USE_TITLE": "Vídeo de como usar o HERisk",
+	"GUIDE": "GUIA",
+	"GUIDE_TITLE": "Ver o guia do usuário",
+	"SAVE_GUIDE": "SALVAR O GUIA",
+	"SAVE_GUIDE_TITLE": "Salvar o guia em DOCX",
+	"PREFERENCES": "PREFERÊNCIAS",
+	"PREFERENCES_TITLE": "Ver as preferências da aplicação",
+	"ABOUT": "SOBRE",
+	"ABOUT_TITLE": "Sobre o HERisk",
+	"COPY": "Todos os direitos reservados",
+	"VERSION": "2.0.0"
+}
